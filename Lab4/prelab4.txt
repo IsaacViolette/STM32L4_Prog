@@ -1,0 +1,24 @@
+Isaac Violette
+ECE 271 Prelab Questions 
+2/17/22
+
+What do infinite loops look like in assembly?
+
+loop:
+	ldr r0,
+	bl do something
+	b loop
+
+When loading the pointer value into r1 we use = to do a PC-relative load from a value in the literal
+area. Why can’t we just specify a 32-bit immediate target to a move instruction like the following?
+					mov r0,#0xdeadbeef
+
+We can't just specify a 32-bit immediate target to move an instruction like that because #0xdeadbeef is
+too large to fit in the mov opcode. Instead when using the equals sign it allows the assembler to do the PC-relative load.
+
+In the example code we orr with an immediate constant pre-pended with #. What would happen if
+your immediate constant didn’t fit? How could you work around that issue?
+
+Like the question above, we could use the equals sign to store the oversized value to do a PC-relative load. Then
+you could use the orr opcode to set the value.
+
