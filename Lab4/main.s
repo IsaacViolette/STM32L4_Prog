@@ -84,21 +84,97 @@ __main	PROC
 	and		r3, #0xFFFCFFFF			;bitwise AND with the value for PE8
 	str		r3,[r1,#GPIO_PUPDR]		;Store value back to base+offset
 	
-	;ODR to turn on Red and Green LED
-	;Green LED
-	ldr		r1,=GPIOE_BASE 		;point R1 to the base register
-	ldr		r3,[r1,#GPIO_ODR]	;load 32-bit value at base+offset
-	orr		r3, #0x100			;bitwise OR with the value for Green LED
-	str		r3,[r1,#GPIO_ODR]	;Store value back to base+offset
+	;Initialize Joystick to be input
+	ldr		r1,=GPIOA_BASE 			;point R1 to the base register
+	ldr		r3,[r1,#GPIO_MODER]		;load 32-bit value at base+offset
+	and		r3, #~GPIO_MODER_MODER0 ;bitwise AND with the value for GPIO Joystick
+	and		r3, #~GPIO_MODER_MODER1
+	and		r3, #~GPIO_MODER_MODER2
+	and		r3, #~GPIO_MODER_MODER3
+	and		r3, #~GPIO_MODER_MODER5
+	str		r3,[r1,#GPIO_MODER]		;Store value back to base+offset
 	
-	;Red LED
-	ldr		r1,=GPIOB_BASE 		;point R1 to the base register
-	ldr		r3,[r1,#GPIO_ODR]	;load 32-bit value at base+offset
-	orr		r3, #0x4			;bitwise OR with the value for Red LED
-	str		r3,[r1,#GPIO_ODR]	;Store value back to base+offset
+	;Initialize the Joystick GPIOs to be PullDown
+	;mask
+	ldr		r1,=GPIOA_BASE 			;point R1 to the base register
+	ldr		r3,[r1,#GPIO_PUPDR]		;load 32-bit value at base+offset
+	and		r3, #~GPIO_PUPDR_PUPDR0 ;bitwise AND with the value for GPIO Joystick
+	and		r3, #~GPIO_PUPDR_PUPDR1
+	and		r3, #~GPIO_PUPDR_PUPDR2
+	and		r3, #~GPIO_PUPDR_PUPDR3
+	and		r3, #~GPIO_PUPDR_PUPDR5
+	str		r3,[r1,#GPIO_PUPDR]		;Store value back to base+offset
 	
+	;set
+	ldr		r1,=GPIOA_BASE 				;point R1 to the base register
+	ldr		r3,[r1,#GPIO_PUPDR]			;load 32-bit value at base+offset
+	orr		r3, #GPIO_PUPDR_PUPDR0_1 	;bitwise OR with the value for GPIO Joystick
+	orr		r3, #GPIO_PUPDR_PUPDR1_1
+	orr		r3, #GPIO_PUPDR_PUPDR2_1
+	orr		r3, #GPIO_PUPDR_PUPDR3_1
+	orr		r3, #GPIO_PUPDR_PUPDR5_1
+	str		r3,[r1,#GPIO_PUPDR]			;Store value back to base+offset
+	
+	
+;set registers to only do the
+	ldr		r1,=GPIOA_BASE
+	ldr		r2,=GPIOB_BASE
+	ldr 	r4,=GPIOE_BASE
 
-BRANCHFOREVER		b BRANCHFOREVER ;Infinite loop
+;inifinte loop
+LOOPFOREVER
+	ldr		r3,[r1, #GPIO_IDR]
+	and		r3, #GPIO_IDR_IDR_3
+	cmp		r3,#GPIO_IDR_IDR_3 	;comparing if IDR is value three for Joystick push up
+	bne 	PUSHEDDOWN 			;not equal go to next argument
+;move to turn LED red if equal
+TURNRED
+	ldr		r3,[r2,#GPIO_ODR]	
+	orr		r3, #0x4			
+	str		r3,[r2,#GPIO_ODR]	
+;turn on red LED
+PUSHEDDOWN
+	ldr		r3,[r1, #GPIO_IDR]
+	and		r3, #GPIO_IDR_IDR_5
+	cmp		r3,#GPIO_IDR_IDR_5 	;comparing if IDR is value three for Joystick push up
+	bne 	PUSHEDCENTER 		;not equal go to next argument
+	;move to turn LED green
+TURNGREEN
+	ldr		r3,[r4,#GPIO_ODR]	
+	orr		r3, #0x100			
+	str		r3,[r4,#GPIO_ODR]	
+;turn on green LED
+PUSHEDCENTER
+	ldr		r3,[r1, #GPIO_IDR]
+	and		r3, #GPIO_IDR_IDR_0
+	cmp		r3,#GPIO_IDR_IDR_0 	
+	bne 	NOTHING 			;if center isn't pressed move to nothing
+	;move to turn on both LEDS
+BOTHLEDS
+	ldr		r3,[r4,#GPIO_ODR]	
+	orr		r3, #0x100			
+	str		r3,[r4,#GPIO_ODR]	
+
+	ldr		r3,[r2,#GPIO_ODR]	
+	orr		r3, #0x4			
+	str		r3,[r2,#GPIO_ODR]	
+	;turn on both LEDS
+NOTHING
+	ldr		r3,[r4,#GPIO_ODR]	
+	and		r3, #~0x100			;turn off Green LED
+	str		r3,[r4,#GPIO_ODR]	
+
+	ldr		r3,[r2,#GPIO_ODR]	
+	and		r3, #~0x4			;turn off Red LED
+	str		r3,[r2,#GPIO_ODR]	
+
+
+	b LOOPFOREVER ;go back to the beginning of the loop
+
+
+
+
+BRANCHFOREVER		b BRANCHFOREVER
 
 
 	;====================================
