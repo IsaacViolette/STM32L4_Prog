@@ -12,6 +12,9 @@
 ;           reason whatever. More information can be found from book website: 
 ;           http:;www.eece.maine.edu/~zhu/book
 ;*******************************************************************************
+;Isaac Violette
+;ECE 271 - Lab 4: GPIOs in Assembly Language
+;2/23/22
 
 	INCLUDE core_cm4_constants.s		; Load Constant Definitions
 	INCLUDE stm32l476xx_constants.s
@@ -131,7 +134,8 @@ LOOPFOREVER
 TURNRED
 	ldr		r3,[r2,#GPIO_ODR]	
 	orr		r3, #0x4			
-	str		r3,[r2,#GPIO_ODR]	
+	str		r3,[r2,#GPIO_ODR]
+	b LOOPFOREVER
 ;turn on red LED
 PUSHEDDOWN
 	ldr		r3,[r1, #GPIO_IDR]
@@ -142,13 +146,14 @@ PUSHEDDOWN
 TURNGREEN
 	ldr		r3,[r4,#GPIO_ODR]	
 	orr		r3, #0x100			
-	str		r3,[r4,#GPIO_ODR]	
+	str		r3,[r4,#GPIO_ODR]
+	b		LOOPFOREVER	
 ;turn on green LED
 PUSHEDCENTER
 	ldr		r3,[r1, #GPIO_IDR]
 	and		r3, #GPIO_IDR_IDR_0
 	cmp		r3,#GPIO_IDR_IDR_0 	
-	bne 	NOTHING 			;if center isn't pressed move to nothing
+	bne 	PUSHRIGHT 			;if center isn't pressed move to pushright
 	;move to turn on both LEDS
 BOTHLEDS
 	ldr		r3,[r4,#GPIO_ODR]	
@@ -158,7 +163,65 @@ BOTHLEDS
 	ldr		r3,[r2,#GPIO_ODR]	
 	orr		r3, #0x4			
 	str		r3,[r2,#GPIO_ODR]	
+	b 		LOOPFOREVER
 	;turn on both LEDS
+PUSHRIGHT
+	ldr		r3,[r1, #GPIO_IDR]
+	and		r3, #GPIO_IDR_IDR_2
+	cmp		r3,#GPIO_IDR_IDR_2 	;comparing if IDR is value three for Joystick push right
+	bne 	NOTHING ;otherwise loop through
+	;when pushed right go into something cool
+SOMETHINGCOOL
+	;turn on Red LED
+	ldr		r3,[r2,#GPIO_ODR]	
+	orr		r3, #0x4			
+	str		r3,[r2,#GPIO_ODR]
+	
+	;turn on Green LED
+	ldr		r3,[r4,#GPIO_ODR]	
+	orr		r3, #0x100			
+	str		r3,[r4,#GPIO_ODR]
+	
+	mov r5,#0 ;delay to keep LED on
+DELAY
+	cmp r5,#0x11000
+	bge DELAYDONE
+	add r5,r5,#1
+	b CHECKONE
+CHECKONE ;while delaying check to see if left joystick is pressed to break out
+	ldr		r3,[r1, #GPIO_IDR]
+	and		r3, #GPIO_IDR_IDR_1
+	cmp		r3,#GPIO_IDR_IDR_1 	;comparing if IDR is value three for Joystick push left
+	beq 	NOTHING
+	b 		DELAY
+	
+DELAYDONE ;when out of delay turn off LEDs
+	ldr		r3,[r2,#GPIO_ODR]	
+	and		r3, #~0x4			;turn off Red LED
+	str		r3,[r2,#GPIO_ODR]
+	
+	ldr		r3,[r4,#GPIO_ODR]	
+	and		r3, #~0x100			;Turn green LED off		
+	str		r3,[r4,#GPIO_ODR]
+	
+	mov r5,#0
+FINALDELAY ;delay to keep the LEDS off
+	cmp r5,#0x11000
+	bge FINISH
+	add r5,r5,#1
+	b CHECKTWO
+	
+CHECKTWO ;Check again while delaying to break out of loop if left joystick is pressed
+	ldr		r3,[r1, #GPIO_IDR]
+	and		r3, #GPIO_IDR_IDR_1
+	cmp		r3,#GPIO_IDR_IDR_1 	;comparing if IDR is value three for Joystick push left
+	beq 	NOTHING
+	b		FINALDELAY
+
+FINISH ;break out of something cool
+	
+	b SOMETHINGCOOL
+
 NOTHING
 	ldr		r3,[r4,#GPIO_ODR]	
 	and		r3, #~0x100			;turn off Green LED
