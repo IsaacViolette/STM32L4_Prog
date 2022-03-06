@@ -1,18 +1,19 @@
 Isaac Violette
-ECE 271 Lab 3
-2/17/22
+ECE 271 Lab 5
+3/2/22
 
-Something cool: When # symbol is pressed, the previous input is displayed at the end of the display
+Something cool: When Right joystick is pressed, the motor moves clockwise, and when the joysick is pressed left, the motor moves counterclockwise. When the joystick is pressed up, the motor moves clockwise 
+infinitely, and when the joystick is pressed down the joystick moves counterclockwise infintely. In both of these cases, if the center button is pressed then the motors stop turning. When any button is pressed
+on the joystick, the LCD displays what button is being pressed.
 
 Post Lab: 
+1. The Darlington array can only provide 500mA of current. If you needed a larger current, what
+could you use instead of the Darlington array?
 
-1. Can your code correctly handle if multiple keys are pressed at once? Why or why not?
+ANSWER:
+If you need high current output, you can put the output pins in parallel which will allow for a current above 500mA.
 
-My code cannot correctly handle when multiple keys are pressed at the same time. When I tested this out
-whatever key that was let go of last was displayed on the screen. The reason behind this is because when two
-buttons are pressed, it can create a short. Also, within my code, when I am using the keyoad scan function, 
-I am checking rows and columns to figure out which button is being pressed. Since there are multiple, nothing happens 
-and my button debouncer is waiting for whatever button is released last. Whatever button is released last, moves
-through my debouncer and gets displayed while nothing happens to the other button that is pressed.  
+2. Is it possible to rotate the motor less than 1/2 step? (Hint, see Chapter 16.6 of the textbook)
 
-
+ANSWER:
+Yes, it is possible to rotate the motor less than a half step This is called micro stepping, but this uses PWM to rotate the fractions of a full step. 
