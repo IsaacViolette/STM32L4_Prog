@@ -1,0 +1,32 @@
+Isaac Violette
+
+ECE 271 Prelab 6
+
+3/6/22
+
+
+PRELAB QUESTIONS:
+
+1. What assembly language instruction is used to call a function in ARM Thumb2 assembly?
+
+ANSWER:
+The assembly language instruction to call a function in ARM Thumb2 assembly is bl (branch-and-link). This stores the value of the next instruction link-register so we can return to the right place after completed.
+
+2. What assembly language instruction is used to return from a function in ARM Thumb2 assembly?
+
+ANSWER:
+The assembly language instruction to return from a function in Thumb2 assembly is bx. This returns to the callsite.
+
+3. With the standard ARM EABI, what register is used to pass a single 32-bit integer argument to a
+function?
+
+ANSWER:
+Th register that is used to pass a 32-bit integer is r0. 
+
+4. If your function is not a leaf function (meaning it calls another function) what must you do with your
+link register (LR) before calling the other function?
+
+ANSWER:
+
+If the function is not a leaf function, you must pop the link register before using bx to return to the previous function
+
