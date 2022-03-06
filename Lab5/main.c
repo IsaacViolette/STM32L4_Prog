@@ -68,13 +68,14 @@ void Stepper_Pin_Init(void)
 	GPIOB->MODER |= (GPIO_MODER_MODER7_0);
 }
 
+//Full Step
 void Stepper_Full_Step(int angle)
 {
 	int i;
 	int delay;
-	int rotation = ((angle)*512.0)/360;
+	int rotation = ((angle)*512.0)/360; //claculates each degree to rotate
 	
-	for(i = 0; i < rotation; i++)
+	for(i = 0; i < rotation; i++) //rotates each degree until the condition is hit
 	{
 		//Step 0
 		GPIOB->BSRR |= GPIO_BSRR_BR_6;
@@ -105,14 +106,15 @@ void Stepper_Full_Step(int angle)
 		for(delay = 0; delay < 6000; delay++);
 	}
 }
-	
+
+//Half Step
 void Stepper_Half_Step(int angle)
 {
 	int i;
 	int delay;
-	int rotation = ((angle)*512.0)/360;
+	int rotation = ((angle)*512.0)/360; //calculates each degree
 	
-	for(i = 0; i < rotation; i++)
+	for(i = 0; i < rotation; i++) //moves each degree until the condition is hit
 	{
 		//Step 0
 		GPIOB->BSRR |= GPIO_BSRR_BR_6;
@@ -187,12 +189,14 @@ void Something_Cool(void)
 
 	while(1)
 	{
-			LCD_Display_String("      ");
-			//The Joystick is pressed right
+			LCD_Display_String("      "); //Sets the initial LCD Screen to be blank
+			
+			//The Joystick is held right
 			while((GPIOA->IDR >> 2) & 0x1)
 			{
 				int i;
 				LCD_Display_String("RIGHT");
+				//Runs through half Step and moves clockwise
 				//Step 0
 				GPIOB->BSRR |= GPIO_BSRR_BR_6;
 				GPIOB->BSRR |= GPIO_BSRR_BR_3;
@@ -250,11 +254,12 @@ void Something_Cool(void)
 				for(i = 0; i < 3000; i++);
 			}
 			
-			//The Joystick is pressed left
+			//The Joystick is held left
 			while((GPIOA->IDR >> 1) & 0x1)
 			{
 				int i;
 				LCD_Display_String("LEFT");
+				//Runs the half step and moves counterclockwise
 				//Step 7
 				GPIOB->BSRR |= GPIO_BSRR_BR_6;
 				GPIOB->BSRR |= GPIO_BSRR_BR_3;
@@ -319,6 +324,7 @@ void Something_Cool(void)
 				{
 					int i;
 					LCD_Display_String("DOWN");
+					//Runs half step counter clcokwise infinitely 
 					//Step 7
 					GPIOB->BSRR |= GPIO_BSRR_BR_6;
 					GPIOB->BSRR |= GPIO_BSRR_BR_3;
@@ -375,7 +381,7 @@ void Something_Cool(void)
 					GPIOB->BSRR |= GPIO_BSRR_BS_2;
 					for(i = 0; i < 3000; i++);
 					
-					if((GPIOA->IDR >> 0) & 0x1)
+					if((GPIOA->IDR >> 0) & 0x1) //Stops when center button is pressed
 						break;
 				}
 			}
@@ -386,6 +392,7 @@ void Something_Cool(void)
 				{
 					int i;
 					LCD_Display_String("UP");
+					//Half step moving clockwise infinitely
 					//Step 0
 					GPIOB->BSRR |= GPIO_BSRR_BR_6;
 					GPIOB->BSRR |= GPIO_BSRR_BR_3;
@@ -442,7 +449,7 @@ void Something_Cool(void)
 					GPIOB->BSRR |= GPIO_BSRR_BS_7;
 					for(i = 0; i < 3000; i++);
 					
-					if((GPIOA->IDR >> 0) & 0x1)
+					if((GPIOA->IDR >> 0) & 0x1) //stops when center button is pressed
 						break;
 				}
 			}
