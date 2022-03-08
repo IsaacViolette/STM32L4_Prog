@@ -21,7 +21,7 @@ The assembly language instruction to return from a function in Thumb2 assembly i
 function?
 
 ANSWER:
-Th register that is used to pass a 32-bit integer is r0. 
+The register that is used to pass a 32-bit integer is r0. 
 
 4. If your function is not a leaf function (meaning it calls another function) what must you do with your
 link register (LR) before calling the other function?
