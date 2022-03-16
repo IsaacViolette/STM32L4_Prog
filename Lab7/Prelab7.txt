@@ -1,0 +1,18 @@
+Isaac Violette
+ECE271: Lab 7 Prelab
+3/16/21
+
+Part B: 
+
+1. Setting the board to run at 8MHz
+
+MSIRANGE = 0111
+(On page 255 of datasheet)
+
+2. Picking the SysTick Reload Value
+
+InterruptPeriod = (1 + VALUE)(1/TimerFrequency)
+
+0.001 = (1 + VALUE)(1/8MHz)
+
+VALUE = 7999
