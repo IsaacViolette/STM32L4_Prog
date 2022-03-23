@@ -137,6 +137,7 @@ void SysTick_Initialize(int ticks){
 }
 
 void SysTick_Handler(void){
+	/*Counts down the Delay*/
 	if(TimeDelay > 0)
 	{
 		TimeDelay--;
@@ -147,6 +148,7 @@ void Delay(uint32_t nTime){
 
 	TimeDelay = nTime;
 	
+	/*Runs the Delay, keeps going until the TimeDelay is zero or less*/
 	while(TimeDelay > 0);
 }
 
