@@ -1,0 +1,31 @@
+Isaac Violette
+
+ECE 271
+
+Lab7 Postlab
+
+Something Cool: Blink S.O.S. with the Red LED
+
+Post Lab Questions:
+
+How close is the delay to 1s?
+
+It's almost exact based off the picture from lab. Maybe a few microseconds off.
+
+What is the percent error?
+
+The percent error is well below 1%.
+
+I wasn't able to get the exact period of the clock pulse as the picture that was sent to 
+me didn't measure it directly and I couldn't do it by eye, so ia assumed it was a few microseconds off.
+
+Question 1: What is the address of the interrupt vector that points to the SysTick handler?
+
+ANSWER: From page 242 from the textbook, the address is 0x0000003C.
+
+Question 2: Suppose a 16MHz clock is used to drive the timer. What is the maximum interval between two
+interrupts that we could obtain?
+
+ANSWER: Max of 24 bits so
+
+((2^24)-1)/16000000 = 1.0485 seconds
