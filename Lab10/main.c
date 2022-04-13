@@ -27,15 +27,21 @@ int main(void){
 	LCD_Pin_Init();
 	LCD_Configure();
 	
+	//Something Cool
 	while(1)
 	{
+		//start conversion
 		ADC1->CR |= ADC_CR_ADSTART;
+
+		//wait for bit to go hight
 		while((ADC123_COMMON->CSR & ADC_CSR_EOC_MST) == 0);
+
+		//store register value to global variable
 		VALUE = ADC1->DR;
 		
-		sprintf(distance, "%d", VALUE);
+		sprintf(distance, "%d", VALUE); //Convert distance to array
 		
-		LCD_Display_String(distance);
+		LCD_Display_String(distance); //print array
 	}
 	
 }
